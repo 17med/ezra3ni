@@ -9,8 +9,8 @@ function gettype(types: string): string {
   switch (types) {
     case "user":
       return "normal";
-    case "provider":
-      return "seller";
+    case "prov":
+      return "prov";
     case "admin":
       return "admin";
     default:
@@ -21,7 +21,7 @@ function gettype(types: string): string {
 const verify = async (token: string): Promise<boolean> => {
   try {
     apiClient = axios.create({
-      baseURL: "http://192.168.43.238:3005",
+      baseURL: "http://192.168.1.131:3005",
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -42,7 +42,7 @@ const login = async (
 ): Promise<boolean> => {
   try {
     apiClient = axios.create({
-      baseURL: "http://192.168.43.238:3005",
+      baseURL: "http://192.168.1.131:3005",
     });
     const response = await apiClient.post("/api/user/login", {
       email: username,
@@ -74,7 +74,7 @@ const create = async (
 ): Promise<boolean> => {
   try {
     apiClient = axios.create({
-      baseURL: "http://192.168.43.238:3005",
+      baseURL: "http://192.168.1.131:3005",
     });
     const response = await apiClient.post("/api/user/create", {
       username,

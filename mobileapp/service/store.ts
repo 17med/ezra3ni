@@ -18,13 +18,12 @@ function decodeJWT(token: string): Record<string, any> | null {
   }
 }
 
-
 function gettype(types: string): string {
   switch (types) {
     case "user":
       return "normal";
-    case "provider":
-      return "seller";
+    case "prov":
+      return "prov";
     case "admin":
       return "admin";
     default:
@@ -83,9 +82,7 @@ const useUserStore = create((set) => ({
     }
   },
 
-
   logout: async (flogout: any) => {
-    
     await SecureStore.deleteItemAsync("userToken");
     set({
       isLogin: false,

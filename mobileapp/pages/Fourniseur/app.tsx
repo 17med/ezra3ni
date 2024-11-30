@@ -11,7 +11,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 const MainNormalStack = createNativeStackNavigator();
 
-// Utility function to convert screen names to numerical values for comparison
 function convert(name: string): number {
   switch (name) {
     case "Homenormalx":

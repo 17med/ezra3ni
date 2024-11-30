@@ -100,7 +100,9 @@ export default function Home({ navigation }: any) {
           >
             <Image
               style={{ borderRadius: 70, width: 150, height: 150 }}
-              source={require("../../assets/fakhri.jpg")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/7077/7077313.png",
+              }}
             />
           </View>
           <Text

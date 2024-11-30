@@ -65,9 +65,7 @@ class UserController {
       return res.status(200).json({ message: "Authorized" });
     }
   }
-  static async (req,res){
-    const {}
-  }
+  static async(req, res) {}
 }
 
 module.exports = UserController;

@@ -5,28 +5,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./home";
 import Collection from "./Collection";
 import Profile from "./Profile";
+import Produit from "./produit";
 import { View } from "react-native";
 import Navbar from "./Components/Navbar";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const MainNormalStack = createNativeStackNavigator();
 
-// Utility function to convert screen names to numerical values for comparison
-function convert(name: string): number {
-  switch (name) {
-    case "Homenormalx":
-      return 1;
-    case "Collactionnormalx":
-      return 2;
-    case "Profilenormalx":
-      return 3;
-    default:
-      return 0;
-  }
-}
-
-// Utility function to determine animation direction
-function selectIcon(
+function selectAnimation(
   name: string,
   prevName: string,
   currentAnimation: string
@@ -34,20 +20,14 @@ function selectIcon(
   if (name === prevName) {
     return currentAnimation;
   } else {
-    return convert(name) > convert(prevName)
-      ? "slide_from_right"
-      : "slide_from_left";
+    return "fade";
   }
 }
 
 export default function MainNormalStackScreen() {
   const navigation = useNavigation<any>();
-  const [currentAnimation, setCurrentAnimation] =
-    useState<string>("slide_from_right");
-  const [screenHistory, setScreenHistory] = useState<string[]>([
-    "Homenormalx",
-    "Homenormalx",
-  ]);
+  const [currentAnimation, setCurrentAnimation] = useState<string>("fade");
+  const [prevScreen, setPrevScreen] = useState<string>("Homenormalx");
 
   const route = useRoute<{
     key: string;
@@ -57,10 +37,13 @@ export default function MainNormalStackScreen() {
 
   useEffect(() => {
     const newScreenName = route.params?.Path ?? route.name;
-    setScreenHistory([newScreenName, screenHistory[0]]);
-    setCurrentAnimation(
-      selectIcon(newScreenName, screenHistory[0], currentAnimation)
+    const newAnimation = selectAnimation(
+      newScreenName,
+      prevScreen,
+      currentAnimation
     );
+    setPrevScreen(newScreenName);
+    setCurrentAnimation(newAnimation);
   }, [route]);
 
   return (
@@ -72,7 +55,7 @@ export default function MainNormalStackScreen() {
             component={Home}
             options={{
               headerShown: false,
-              animation: "slide_from_left",
+              animation: "fade",
             }}
           />
           <MainNormalStack.Screen
@@ -84,11 +67,19 @@ export default function MainNormalStackScreen() {
             }}
           />
           <MainNormalStack.Screen
+            name="Produitnormalx"
+            component={Produit}
+            options={{
+              headerShown: false,
+              animation: currentAnimation,
+            }}
+          />
+          <MainNormalStack.Screen
             name="Profilenormalx"
             component={Profile}
             options={{
               headerShown: false,
-              animation: "slide_from_right",
+              animation: "fade",
             }}
           />
         </MainNormalStack.Navigator>

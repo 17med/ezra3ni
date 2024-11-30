@@ -40,7 +40,11 @@ export default function Home({ navigation }: any) {
   });
 
   if (!fontsLoaded) {
-    return <Text>Loading ...</Text>;
+    return (
+      <View
+        style={{ backgroundColor: "#FFE4C5", display: "flex", flex: 1 }}
+      ></View>
+    );
   }
 
   return (
@@ -100,7 +104,9 @@ export default function Home({ navigation }: any) {
           >
             <Image
               style={{ borderRadius: 70, width: 150, height: 150 }}
-              source={require("../../assets/fakhri.jpg")}
+              source={{
+                uri: "https://cdn-icons-png.flaticon.com/512/7077/7077313.png",
+              }}
             />
           </View>
           <Text

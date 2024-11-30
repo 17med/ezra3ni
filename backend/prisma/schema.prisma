@@ -1,24 +1,59 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
-
-
-model Users{
-  id Int @id @default(autoincrement())
-  username String 
-  email String @unique
+model Users {
+  id       Int       @id @default(autoincrement())
+  username String
+  email    String    @unique
   password String
-  types String @default("user")
+  types    String    @default("user")
+  
+  products Products[] @relation("UserProducts")
+  carts    Cart[]
+  commands Command[]
+}
 
+model Products {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  image       String
+  createdAt   DateTime @default(now())
+  ownerId     Int
+  owner       Users    @relation("UserProducts", fields: [ownerId], references: [id], onDelete: Cascade) 
+  
+  cartItems   CartItem[]
+  commandItems CommandItem[]
+}
+
+model Cart {
+  id       Int       @id @default(autoincrement())
+  userId   Int
+  user     Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items    CartItem[]
+  createdAt DateTime @default(now())
+}
+
+model CartItem {
+  id         Int      @id @default(autoincrement())
+  quantity   Int      @default(1)
+  cartId     Int
+  cart       Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId  Int
+  product    Products @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Command {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        Users     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  items       CommandItem[]
+}
+
+model CommandItem {
+  id         Int      @id @default(autoincrement())
+  quantity   Int      @default(1)
+  commandId  Int
+  command    Command  @relation(fields: [commandId], references: [id], onDelete: Cascade)
+  productId  Int
+  product    Products @relation(fields: [productId], references: [id], onDelete: Cascade)
 }

@@ -2,11 +2,15 @@ import React from "react";
 import useStore from "../service/store";
 import Homenormal from "./normaluser/app";
 import Homeadmin from "./Admin/app";
+import HomeProvider from "./Fourniseur/app";
 import { View, Text } from "react-native";
 function Selector({ type }: any) {
+  console.log(type);
   switch (type) {
     case "normal":
       return <Homenormal />;
+    case "prov":
+      return <HomeProvider />;
     case "admin":
       return <Homeadmin />;
     default:

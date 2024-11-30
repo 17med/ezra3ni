@@ -1,5 +1,11 @@
 import React from "react";
-import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import { Text } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
@@ -12,6 +18,38 @@ import {
 } from "@expo-google-fonts/poppins";
 import List from "./Components/List";
 import { IconButton } from "react-native-paper";
+import Svg, { Path } from "react-native-svg";
+const UserList = ({ users, onButtonClick }: any) => {
+  const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+  const renderItem = ({ item }: any) => (
+    <View style={styles2.itemContainer}>
+      <Text style={styles2.username}>{item.username}</Text>
+      {item.type === "user" ? (
+        <TouchableOpacity
+          style={styles2.button}
+          onPress={() => onButtonClick(item.username)}
+        >
+          <Text style={styles2.buttonText}>Set Seller</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          style={styles2.button}
+          onPress={() => onButtonClick(item.username)}
+        >
+          <Text style={styles2.buttonText}>Set User</Text>
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+
+  return (
+    <FlatList
+      data={users}
+      renderItem={renderItem}
+      keyExtractor={(item) => item.username}
+    />
+  );
+};
 
 function Mybtn({
   IsActive,
@@ -30,7 +68,6 @@ function Mybtn({
   );
 }
 
-import Svg, { Path } from "react-native-svg";
 export default function Home() {
   const [nbpage, setnbpage] = useState(0);
   const [fontsLoaded] = useFonts({
@@ -41,7 +78,11 @@ export default function Home() {
   if (!fontsLoaded) {
     return <Text>Loading ...</Text>;
   }
-
+  const users = [
+    { username: "user1", type: "user" },
+    { username: "user2", type: "user" },
+    { username: "user3", type: "prov" },
+  ];
   return (
     <View style={{ backgroundColor: "#FFE4C5", display: "flex", flex: 1 }}>
       <SafeAreaProvider style={{ marginTop: 50 }}>
@@ -56,8 +97,8 @@ export default function Home() {
             variant="titleLarge"
             style={{ fontFamily: "Poppins_300Light", marginLeft: 20 }}
           >
-            Find your
-            {"\n"}favorite plants
+            Control ur
+            {"\n"}Users
           </Text>
 
           <IconButton
@@ -74,108 +115,7 @@ export default function Home() {
             onPress={() => console.log("Pressed")}
           />
         </View>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <View style={styles.box}>
-            <View>
-              <Text
-                variant="headlineLarge"
-                style={{
-                  fontFamily: "Poppins_600SemiBold",
-                  marginLeft: 13,
-                  marginTop: 20,
-                  color: "white",
-                }}
-              >
-                30% off
-              </Text>
-              <Text
-                variant="titleLarge"
-                style={{
-                  fontFamily: "Poppins_300Light",
-                  marginTop: -10,
-                  marginLeft: 18,
-                  fontSize: 11,
-                  color: "white",
-                }}
-              >
-                02-03 DECEMBER
-              </Text>
-            </View>
-            <View>
-              <Svg
-                width="246"
-                height="105"
-                viewBox="0 0 246 105"
-                fill="none"
-                style={{ marginLeft: -60, marginTop: -10 }}
-              >
-                <Path
-                  d="M0 1C34.3333 1.5 100.7 13.3 91.5 56.5C82.3 99.7 190.333 105.833 245.5 103.5"
-                  stroke="#FFDFBA"
-                />
-              </Svg>
-              <Animatable.View
-                animation="fadeIn"
-                duration={1500} // Animation duration in milliseconds
-              >
-                <Image
-                  source={require("../../assets/Plant.png")}
-                  style={{
-                    width: 140,
-                    height: 140,
-                    marginTop: -120,
-                    marginLeft: 20,
-                  }}
-                />
-              </Animatable.View>
-            </View>
-          </View>
-        </View>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-            marginTop: 20,
-          }}
-        >
-          <Mybtn
-            IsActive={nbpage == 0}
-            text={"All"}
-            onclick={() => {
-              setnbpage(0);
-            }}
-          />
-          <Mybtn
-            IsActive={nbpage == 1}
-            text={"Indoor"}
-            onclick={() => {
-              setnbpage(1);
-            }}
-          />
-          <Mybtn
-            IsActive={nbpage == 2}
-            text={"Outdoor"}
-            onclick={() => {
-              setnbpage(2);
-            }}
-          />
-          <Mybtn
-            IsActive={nbpage == 3}
-            text={"Popular"}
-            onclick={() => {
-              setnbpage(3);
-            }}
-          />
-        </View>
-        <List />
+        <UserList users={users} onButtonClick={() => {}} />
       </SafeAreaProvider>
     </View>
   );
@@ -185,9 +125,9 @@ const styles = StyleSheet.create({
     width: "85%",
     height: 120,
     marginTop: 20,
-    backgroundColor: "#00745180",
+    backgroundColor: "#FFE4C5",
     borderWidth: 2,
-    borderColor: "#00745180",
+    borderColor: "#FFE4C5",
     borderRadius: 20,
 
     flexDirection: "row",
@@ -217,5 +157,48 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+  },
+});
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#FFE4C5",
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  itemContainer: {
+    flexDirection: "row",
+
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    paddingLeft: 20,
+    backgroundColor: "#FFE4C5",
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  username: {
+    fontSize: 18,
+  },
+  button: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    height: 40,
+    alignContent: "center",
+    textAlign: "center",
+    display: "flex",
+    justifyContent: "center",
+    backgroundColor: "#007451",
+    paddingLeft: 10,
+    borderRadius: 5,
+    width: 100,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
   },
 });

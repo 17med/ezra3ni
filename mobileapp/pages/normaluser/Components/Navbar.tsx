@@ -100,9 +100,14 @@ export default function Navbar() {
         )}
       />
       <Btn
-        isActive={false}
-        desictovate={true}
-        onClick={() => console.log("click")}
+        isActive={pagex == "Produitnormalx"}
+        desictovate={false}
+        onClick={() =>
+          navigation.navigate("Homenormal", {
+            screen: "Produitnormalx",
+            Path: "Produitnormalx",
+          })
+        }
         svg={() => (
           <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <Path
@@ -120,7 +125,7 @@ export default function Navbar() {
         )}
       />
       <Btn
-        isActive={false}
+        isActive={pagex == "Profilenormalx"}
         onClick={() =>
           navigation.navigate("Homenormal", {
             screen: "Profilenormalx",

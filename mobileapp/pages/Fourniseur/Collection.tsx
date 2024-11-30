@@ -6,11 +6,8 @@ import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import * as Animatable from "react-native-animatable";
 import Navbar from "./Components/Navbar";
-import {
-  Poppins_300Light,
-  Poppins_600SemiBold,
-} from "@expo-google-fonts/poppins";
-import List from "./Components/List2";
+import { Poppins_600SemiBold } from "@expo-google-fonts/poppins";
+import List from "./Components/List";
 import { IconButton } from "react-native-paper";
 
 function Mybtn({
@@ -34,7 +31,6 @@ import Svg, { Path } from "react-native-svg";
 export default function Home() {
   const [nbpage, setnbpage] = useState(0);
   const [fontsLoaded] = useFonts({
-    Poppins_300Light,
     Poppins_600SemiBold,
   });
 
@@ -54,10 +50,10 @@ export default function Home() {
         >
           <Text
             variant="titleLarge"
-            style={{ fontFamily: "Poppins_300Light", marginLeft: 20 }}
+            style={{ fontFamily: "Poppins_600SemiBold", marginLeft: 20 }}
           >
             Your
-            {"\n"}Collection !
+            {"\n"}Orders !
           </Text>
 
           <IconButton
@@ -74,44 +70,7 @@ export default function Home() {
             onPress={() => console.log("Pressed")}
           />
         </View>
-        <View
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-            marginTop: 20,
-          }}
-        >
-          <Mybtn
-            IsActive={nbpage == 0}
-            text={"All"}
-            onclick={() => {
-              setnbpage(0);
-            }}
-          />
-          <Mybtn
-            IsActive={nbpage == 1}
-            text={"Indoor"}
-            onclick={() => {
-              setnbpage(1);
-            }}
-          />
-          <Mybtn
-            IsActive={nbpage == 2}
-            text={"Outdoor"}
-            onclick={() => {
-              setnbpage(2);
-            }}
-          />
-          <Mybtn
-            IsActive={nbpage == 3}
-            text={"Popular"}
-            onclick={() => {
-              setnbpage(3);
-            }}
-          />
-        </View>
+
         <List />
       </SafeAreaProvider>
     </View>
