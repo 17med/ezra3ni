@@ -8,8 +8,8 @@ import {
   ScrollView,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-
-const plants = [
+import { addproduct } from "../../../service/CarManager";
+const plantsx = [
   {
     id: 1,
     name: "MUSA",
@@ -33,7 +33,7 @@ const plants = [
   },
 ];
 
-export default function App() {
+export default function App({ plants, token }: any) {
   return (
     <View style={styles.container}>
       <ScrollView
@@ -41,10 +41,15 @@ export default function App() {
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}
       >
-        {plants.map((plant) => (
+        {plants.map((plant: any) => (
           <View key={plant.id} style={styles.card}>
             {/* Favorite Icon */}
-            <TouchableOpacity style={styles.heartIcon}>
+            <TouchableOpacity
+              style={styles.heartIcon}
+              onPress={() => {
+                addproduct(token, plant.id);
+              }}
+            >
               <FontAwesome name="heart" size={20} color="white" />
             </TouchableOpacity>
 

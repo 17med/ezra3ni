@@ -50,7 +50,22 @@ class UserController {
     }
   }
   static async transformUser(req, res) {
-    res.send("Transform User");
+    const { iduser, types } = req.body;
+    console.log(iduser, types);
+    try {
+      const user = await prisma.Users.update({
+        where: {
+          id: iduser,
+        },
+        data: {
+          types: types,
+        },
+      });
+      res.json(user);
+    } catch (e) {
+      console.log(e);
+      res.json({ message: "Error" });
+    }
   }
   static async isLogin(req, res) {
     const x = getTokenfromrequest(req, res);
@@ -65,7 +80,31 @@ class UserController {
       return res.status(200).json({ message: "Authorized" });
     }
   }
-  static async(req, res) {}
+  static async getUsers(req, res) {
+    try {
+      // Fetch all users where `types` is not 'admin'
+      const users = await prisma.users.findMany({
+        where: {
+          types: { not: "admin" },
+        },
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          types: true,
+        },
+      });
+
+      if (users.length === 0) {
+        return res.status(404).json({ message: "No users found" });
+      }
+
+      res.json(users);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Error fetching users" });
+    }
+  }
 }
 
 module.exports = UserController;

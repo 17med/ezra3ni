@@ -6,6 +6,12 @@ function createToken(data) {
   console.log("key", key);
   return jwt.sign(data, key);
 }
-function verifyToken(token) {}
+function verifyToken(token) {
+  try {
+    return jwt.verify(token, key);
+  } catch (e) {
+    return null;
+  }
+}
 
 module.exports = { createToken, verifyToken };

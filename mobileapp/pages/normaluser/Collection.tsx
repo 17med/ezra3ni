@@ -29,10 +29,17 @@ function Mybtn({
     </TouchableOpacity>
   );
 }
-
+import { getprodAll } from "../../service/ProductManager";
+import useStore from "../../service/store";
 import Svg, { Path } from "react-native-svg";
 export default function Home() {
   const [nbpage, setnbpage] = useState(0);
+  const [product, setproduct] = useState([]);
+  const store = useStore();
+  useEffect(() => {
+    //@ts-ignore
+    getprodAll(store.token, setproduct);
+  }, []);
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
     Poppins_600SemiBold,
@@ -112,7 +119,13 @@ export default function Home() {
             }}
           />
         </View>
-        <List />
+        <List
+          token={
+            // @ts-ignore
+            store.token
+          }
+          plants={product}
+        />
       </SafeAreaProvider>
     </View>
   );

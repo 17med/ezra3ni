@@ -19,6 +19,7 @@ import {
 import List from "./Components/List";
 import { IconButton } from "react-native-paper";
 import { Button } from "react-native-paper";
+import { deleteproduct } from "../../service/CarManager";
 function Mybtn({
   IsActive,
   text,
@@ -37,9 +38,20 @@ function Mybtn({
 }
 import useUserStore from "../../service/store";
 import Svg, { Path } from "react-native-svg";
+import { CarManager, passorder } from "../../service/CarManager";
 export default function Home({ navigation }: any) {
   const appstore = useUserStore();
+
+  const [product, setproduct] = useState([]);
   const [nbpage, setnbpage] = useState(0);
+  const [refx, setrefx] = useState(false);
+  useEffect(() => {
+    //@ts-ignore
+    CarManager(appstore.token, setproduct);
+  }, [refx]);
+  useEffect(() => {
+    console.log("pto", product);
+  }, [product]);
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
     Poppins_600SemiBold,
@@ -61,16 +73,22 @@ export default function Home({ navigation }: any) {
     <View style={styles.item}>
       <View style={styles.content}>
         <View style={styles.row}>
-          <Text style={styles.text}>{item.name}</Text>
-          <Text style={styles.text}>testss</Text>
+          <Text style={styles.text}>
+            {item.product.name}{" "}
+            <Text style={{ fontStyle: "blod" }}>X{item.quantity}</Text>
+          </Text>
+
+          <Text style={styles.text}>{item.product.price}$</Text>
         </View>
       </View>
       <Button
         mode="contained"
-        onPress={() => console.log("Pressed")}
+        onPress={async () => {
+          await deleteproduct(appstore.token, item.product.id);
+          setrefx(!refx);
+        }}
         labelStyle={{
           fontSize: 13,
-
           fontFamily: "Poppins_300Light",
         }}
         textColor="#FFE4C5"
@@ -78,7 +96,6 @@ export default function Home({ navigation }: any) {
         style={{
           width: 120,
           marginTop: 20,
-
           borderRadius: 20,
         }}
       >
@@ -134,14 +151,20 @@ export default function Home({ navigation }: any) {
               flex: 1,
               display: "flex",
             }}
-            data={data}
+            data={product}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
             contentContainerStyle={styles.listContainer}
           />
+
           <Button
             mode="contained"
-            onPress={() => console.log("Pressed")}
+            onPress={async () => {
+              if (product.length > 0) {
+                await passorder(appstore.token);
+                setrefx(!refx);
+              }
+            }}
             labelStyle={{
               fontSize: 19,
 

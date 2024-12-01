@@ -4,12 +4,12 @@ const prisma = new PrismaClient();
 class ProductController {
   static async createProduct(req, res) {
     try {
-      const { name, price, description, image, ownerId } = req.body;
+      const { name, price, image, ownerId } = req.body;
       const product = await prisma.Products.create({
         data: {
           name,
           price,
-          description,
+
           image,
           ownerId,
         },
@@ -44,6 +44,32 @@ class ProductController {
     } catch (e) {
       console.error(e);
       res.status(500).json({ message: "Error fetching product" });
+    }
+  }
+  static async deleteProduct(req, res) {
+    try {
+      const { id } = req.params;
+      const product = await prisma.Products.delete({
+        where: { id: parseInt(id) },
+      });
+      res.json(product);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Error deleting product" });
+    }
+  }
+  static async getProductsByOwner(req, res) {
+    try {
+      const { ownerId } = req.params;
+
+      const products = await prisma.Products.findMany({
+        where: { ownerId: parseInt(ownerId) },
+      });
+
+      res.json(products);
+    } catch (e) {
+      console.error(e);
+      res.status(500).json({ message: "Error fetching products" });
     }
   }
 }

@@ -26,10 +26,16 @@ function Mybtn({
     </TouchableOpacity>
   );
 }
-
+import useUserStore from "../../service/store";
+import { getorders } from "../../service/CarManager";
 import Svg, { Path } from "react-native-svg";
 export default function Home() {
+  const [command, setcommand] = useState([]);
   const [nbpage, setnbpage] = useState(0);
+  const appstore = useUserStore();
+  useEffect(() => {
+    getorders(appstore.token, setcommand);
+  }, []);
   const [fontsLoaded] = useFonts({
     Poppins_600SemiBold,
   });
@@ -70,8 +76,7 @@ export default function Home() {
             onPress={() => console.log("Pressed")}
           />
         </View>
-
-        <List />
+        <List list={command} />
       </SafeAreaProvider>
     </View>
   );

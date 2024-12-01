@@ -6,13 +6,14 @@ import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import * as Animatable from "react-native-animatable";
 import Navbar from "./Components/Navbar";
+import useStore from "../../service/store";
 import {
   Poppins_300Light,
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
 import List from "./Components/List";
 import { IconButton } from "react-native-paper";
-import { getProduct } from "../../service/sendmessage";
+import { getprodAll } from "../../service/ProductManager";
 function Mybtn({
   IsActive,
   text,
@@ -34,8 +35,10 @@ import Svg, { Path } from "react-native-svg";
 export default function Home() {
   const [nbpage, setnbpage] = useState(0);
   const [product, setproduct] = useState([]);
+  const store = useStore();
   useEffect(() => {
-    getProduct();
+    //@ts-ignore
+    getprodAll(store.token, setproduct);
   }, []);
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
@@ -179,7 +182,13 @@ export default function Home() {
             }}
           />
         </View>
-        <List />
+        <List
+          token={
+            // @ts-ignore
+            store.token
+          }
+          plants={product}
+        />
       </SafeAreaProvider>
     </View>
   );

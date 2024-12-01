@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import {
   View,
@@ -19,22 +20,23 @@ import {
 import List from "./Components/List";
 import { IconButton } from "react-native-paper";
 import Svg, { Path } from "react-native-svg";
-const UserList = ({ users, onButtonClick }: any) => {
+import { Update } from "../../service/usersManager";
+const UserList = ({ users, onButtonClick, refrech, token }: any) => {
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   const renderItem = ({ item }: any) => (
     <View style={styles2.itemContainer}>
       <Text style={styles2.username}>{item.username}</Text>
-      {item.type === "user" ? (
+      {item.types === "user" ? (
         <TouchableOpacity
           style={styles2.button}
-          onPress={() => onButtonClick(item.username)}
+          onPress={() => Update(token, item.id, "prov", refrech)}
         >
           <Text style={styles2.buttonText}>Set Seller</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
           style={styles2.button}
-          onPress={() => onButtonClick(item.username)}
+          onPress={() => Update(token, item.id, "user", refrech)}
         >
           <Text style={styles2.buttonText}>Set User</Text>
         </TouchableOpacity>
@@ -67,9 +69,16 @@ function Mybtn({
     </TouchableOpacity>
   );
 }
-
+import useStore from "../../service/store";
+import { getusers } from "../../service/usersManager";
 export default function Home() {
   const [nbpage, setnbpage] = useState(0);
+  const [data, setdata] = useState([]);
+  const [refrech, setrefrech] = useState(false);
+  const app = useStore();
+  useEffect(() => {
+    getusers(app.token, setdata);
+  }, [refrech]);
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
     Poppins_600SemiBold,
@@ -115,7 +124,12 @@ export default function Home() {
             onPress={() => console.log("Pressed")}
           />
         </View>
-        <UserList users={users} onButtonClick={() => {}} />
+        <UserList
+          users={data}
+          token={app.token}
+          refrech={() => setrefrech(!refrech)}
+          onButtonClick={() => {}}
+        />
       </SafeAreaProvider>
     </View>
   );

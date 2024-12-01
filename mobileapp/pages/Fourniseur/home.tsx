@@ -1,3 +1,4 @@
+//@ts-nocheck
 import React from "react";
 import {
   View,
@@ -16,31 +17,25 @@ import {
   Poppins_300Light,
   Poppins_600SemiBold,
 } from "@expo-google-fonts/poppins";
+import { deleteprod } from "../../service/ProductManager";
 import List from "./Components/List";
 import { IconButton } from "react-native-paper";
 import Svg, { Path, G } from "react-native-svg";
-const UserList = ({ users, onButtonClick }: any) => {
+
+const UserList = ({ users, onButtonClick, refrech, token }: any) => {
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   const renderItem = ({ item }: any) => (
     <View style={styles2.itemContainer}>
-      <Text style={styles2.username}>{item.username}</Text>
+      <Text style={styles2.username}>{item.name}</Text>
 
       <View style={styles2.itemContainer}>
         <TouchableOpacity
-          style={styles2.button}
-          onPress={() => onButtonClick(item.username)}
-        >
-          <Svg width="20" height="22" viewBox="0 0 20 22" fill="none">
-            <Path
-              d="M10 0L19.5 5.5V16.5L10 22L0.5 16.5V5.5L10 0ZM10 2.311L2.5 6.653V15.347L10 19.689L17.5 15.347V6.653L10 2.311ZM10 15C8.93913 15 7.92172 14.5786 7.17157 13.8284C6.42143 13.0783 6 12.0609 6 11C6 9.93913 6.42143 8.92172 7.17157 8.17157C7.92172 7.42143 8.93913 7 10 7C11.0609 7 12.0783 7.42143 12.8284 8.17157C13.5786 8.92172 14 9.93913 14 11C14 12.0609 13.5786 13.0783 12.8284 13.8284C12.0783 14.5786 11.0609 15 10 15ZM10 13C10.5304 13 11.0391 12.7893 11.4142 12.4142C11.7893 12.0391 12 11.5304 12 11C12 10.4696 11.7893 9.96086 11.4142 9.58579C11.0391 9.21071 10.5304 9 10 9C9.46957 9 8.96086 9.21071 8.58579 9.58579C8.21071 9.96086 8 10.4696 8 11C8 11.5304 8.21071 12.0391 8.58579 12.4142C8.96086 12.7893 9.46957 13 10 13Z"
-              fill="black"
-            />
-          </Svg>
-        </TouchableOpacity>
-
-        <TouchableOpacity
           style={styles2.button2}
-          onPress={() => onButtonClick(item.username)}
+          onPress={async () => {
+            console.log("delete:", item.id);
+            await deleteprod(item.id, token);
+            refrech();
+          }}
         >
           <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
             <Path
@@ -71,7 +66,7 @@ const UserList = ({ users, onButtonClick }: any) => {
     <FlatList
       data={users}
       renderItem={renderItem}
-      keyExtractor={(item) => item.username}
+      keyExtractor={(item) => item.id}
     />
   );
 };
@@ -92,9 +87,26 @@ function Mybtn({
     </TouchableOpacity>
   );
 }
-
+import useStore from "../../service/store";
+import { getprod } from "../../service/ProductManager";
+import { useRoute } from "@react-navigation/native";
 export default function Home({ navigation }: { navigation: any }) {
   const [nbpage, setnbpage] = useState(0);
+  const [productx, setproductx] = useState([]);
+  const [state, setstate] = useState(false);
+  const store = useStore();
+  const route = useRoute<{
+    key: string;
+    name: string;
+    params?: { Path?: string };
+  }>();
+  useEffect(() => {
+    console.log("productx:", productx);
+  }, [productx]);
+  useEffect(() => {
+    //@ts-ignore
+    getprod(store.token, setproductx);
+  }, [route.params, state]);
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
     Poppins_600SemiBold,
@@ -108,9 +120,10 @@ export default function Home({ navigation }: { navigation: any }) {
     { username: "user2", type: "user" },
     { username: "user3", type: "prov" },
   ];
+
   return (
     <View style={{ backgroundColor: "#FFE4C5", display: "flex", flex: 1 }}>
-      <SafeAreaProvider style={{ marginTop: 50 }}>
+      <SafeAreaProvider style={{ flex: 0.9, marginTop: 50 }}>
         <View
           style={{
             flexDirection: "row",
@@ -161,9 +174,12 @@ export default function Home({ navigation }: { navigation: any }) {
             }
           />
         </View>
-        <UserList users={users} onButtonClick={() => {}} />
-
-          
+        <UserList
+          users={productx}
+          refrech={() => setstate(!state)}
+          onButtonClick={() => {}}
+          token={store.token}
+        />
       </SafeAreaProvider>
     </View>
   );

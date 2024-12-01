@@ -11,36 +11,28 @@ import {
   Poppins_300Light,
 } from "@expo-google-fonts/poppins";
 import { useFonts } from "expo-font";
-const AccordionList = () => {
-  // Load the fonts
+
+const AccordionList = ({ list }: { list: any[] }) => {
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
     Poppins_600SemiBold,
   });
 
-  // Display loading message while fonts are being loaded
   if (!fontsLoaded) {
     return <Text>Loading fonts...</Text>;
   }
 
-  // State for controlling which item is expanded
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const handlePress = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
-  const data = [
-    { id: "1", title: "Item 1", content: "Details about Item 1" },
-    { id: "2", title: "Item 2", content: "Details about Item 2" },
-    { id: "3", title: "Item 3", content: "Details about Item 3" },
-  ];
-
   const renderItem = ({
     item,
     index,
   }: {
-    item: { title: string; content: string };
+    item: { id: number; items: any[]; user: any; createdAt: string };
     index: number;
   }) => (
     <View style={styles.itemContainer}>
@@ -48,11 +40,19 @@ const AccordionList = () => {
         onPress={() => handlePress(index)}
         style={styles.accordionHeader}
       >
-        <Text style={styles.accordionTitle}>{item.title}</Text>
+        <Text style={styles.accordionTitle}>Order ID: {item.id}</Text>
+        <Text style={styles.accordionSubtitle}>User: {item.user.username}</Text>
       </TouchableOpacity>
       {expandedIndex === index && (
         <View style={styles.accordionContent}>
-          <Text>{item.content}</Text>
+          <Text>Created At: {new Date(item.createdAt).toLocaleString()}</Text>
+          {item.items.map((subItem: any) => (
+            <View key={subItem.id} style={styles.subItem}>
+              <Text>Command ID: {subItem.commandId}</Text>
+              <Text>Product ID: {subItem.productId}</Text>
+              <Text>Quantity: {subItem.quantity}</Text>
+            </View>
+          ))}
         </View>
       )}
     </View>
@@ -60,9 +60,9 @@ const AccordionList = () => {
 
   return (
     <FlatList
-      data={data}
+      data={list}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.id.toString()}
     />
   );
 };
@@ -81,10 +81,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: "Poppins_600SemiBold",
   },
+  accordionSubtitle: {
+    fontSize: 16,
+    fontFamily: "Poppins_300Light",
+  },
   accordionContent: {
     padding: 15,
     fontFamily: "Poppins_300Light",
-    backgroundColor: "#FFDFBA",
+    backgroundColor: "#FFF5E1",
+  },
+  subItem: {
+    marginVertical: 5,
   },
 });
 
