@@ -12,7 +12,7 @@ import {
 } from "@expo-google-fonts/poppins";
 import List from "./Components/List";
 import { IconButton } from "react-native-paper";
-
+import { getProduct } from "../../service/sendmessage";
 function Mybtn({
   IsActive,
   text,
@@ -33,6 +33,10 @@ function Mybtn({
 import Svg, { Path } from "react-native-svg";
 export default function Home() {
   const [nbpage, setnbpage] = useState(0);
+  const [product, setproduct] = useState([]);
+  useEffect(() => {
+    getProduct();
+  }, []);
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
     Poppins_600SemiBold,

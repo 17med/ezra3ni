@@ -13,7 +13,7 @@ model Users {
 model Products {
   id          Int      @id @default(autoincrement())
   name        String
-  description String
+  description String @default("")
   image       String
   createdAt   DateTime @default(now())
   ownerId     Int

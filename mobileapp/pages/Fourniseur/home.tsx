@@ -93,7 +93,7 @@ function Mybtn({
   );
 }
 
-export default function Home() {
+export default function Home({ navigation }: { navigation: any }) {
   const [nbpage, setnbpage] = useState(0);
   const [fontsLoaded] = useFonts({
     Poppins_300Light,
@@ -153,10 +153,17 @@ export default function Home() {
               </Svg>
             )}
             size={35}
-            onPress={() => console.log("Pressed")}
+            onPress={() =>
+              navigation.navigate("Homenormal", {
+                screen: "modal",
+                Path: "modal",
+              })
+            }
           />
         </View>
         <UserList users={users} onButtonClick={() => {}} />
+
+          
       </SafeAreaProvider>
     </View>
   );

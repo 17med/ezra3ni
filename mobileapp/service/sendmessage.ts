@@ -98,4 +98,17 @@ const create = async (
   }
 };
 
-export { verify, login, create };
+const getProduct = async () => {
+  try {
+    apiClient = axios.create({
+      baseURL: "http://192.168.1.131:3005",
+    });
+    const response = await apiClient.get("/api/product/");
+    console.log("Product:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Product failed:", error);
+    return [];
+  }
+};
+export { verify, login, create, getProduct };
