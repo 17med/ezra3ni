@@ -8,5 +8,7 @@ Router.use("/user", UserRouter);
 Router.use("/cart", CartRouter);
 Router.use("/order", OrderRouter);
 Router.use("/product", ProductRouter);
-
+Router.get("/", (req, res) => {
+  res.send("API is running");
+});
 module.exports = Router;

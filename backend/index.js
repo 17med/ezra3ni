@@ -14,6 +14,9 @@ Connect()
   .catch((error) => {
     console.log(error);
   });
+app.get("/", (req, res) => {
+  res.send("server is running");
+});
 const port = process.env.PORT || 3005;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server is running on port ${port}`);
